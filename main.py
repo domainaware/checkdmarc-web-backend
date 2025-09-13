@@ -42,7 +42,7 @@ def domain(domain):
             "An api_key parameter must be provided.",
             status=401,
         )
-    if check_smtp_tls.lower() in [1, "true"]:
+    if check_smtp_tls is not None and check_smtp_tls in [1, "true"]:
         if provided_api_key is None:
             return Response(
                 "An api_key parameter must be provided if check_smtp_tls is true.",
