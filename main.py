@@ -15,6 +15,9 @@ else:
     print("Error: API_KEY is missing from the environment variables.")
     exit(1)
 
+nameservers = None
+if "NAMESERVERS" in os.environ:
+    nameservers = os.environ["NAMESERVERS"].split(",")
 
 app = Flask(__name__)
 
@@ -37,5 +40,7 @@ def domain(domain):
         else:
             return Response("The provided API key is invalid", status=403)
 
-    results = checkdmarc.check_domains([domain], skip_tls=skip_tls)
+    results = checkdmarc.check_domains(
+        [domain], nameservers=nameservers, skip_tls=skip_tls
+    )
     return jsonify(results)
