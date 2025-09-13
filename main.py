@@ -1,19 +1,24 @@
 # 1/usr/bin/env python
 
 import os
+import json
 
 import dotenv
 import checkdmarc
 
-from flask import Flask, jsonify, request, Response
+from flask import Flask, request, Response
 
 dotenv.load_dotenv()
 api_key = None
+api_key_required = False
 if "API_KEY" in os.environ:
     api_key = os.environ["API_KEY"].strip()
 else:
     print("Error: API_KEY is missing from the environment variables.")
     exit(1)
+
+if "API_KEY_REQUIRED" in os.environ:
+    api_key = True if os.environ["API_KEY_REQUIRED"].lower() in ["1", "true"] else False
 
 nameservers = None
 if "NAMESERVERS" in os.environ:
@@ -27,10 +32,15 @@ def domain(domain):
     skip_tls = True
     check_smtp_tls = request.args.get("check_smtp_tls")
     provided_api_key = request.args.get("api_key")
-    if check_smtp_tls in [1, "true", "True"]:
+    if api_key_required and provided_api_key is None:
+           return Response(
+                "An api_key parameter must be provided.",
+                status=401,
+            )
+    if check_smtp_tls.lower() in [1, "true"]:
         if provided_api_key is None:
             return Response(
-                "An api_key parameter must be provided if check_smtp_tls is true",
+                "An api_key parameter must be provided if check_smtp_tls is true.",
                 status=401,
             )
         else:
@@ -43,4 +53,10 @@ def domain(domain):
     results = checkdmarc.check_domains(
         [domain], nameservers=nameservers, skip_tls=skip_tls
     )
-    return jsonify(results)
+    status = 200
+    if "error" in results["soa"]:
+        if "does not exist" in results["soa"]["error"]:
+            status = 404
+    results = json.dumps(results, indent=2)
+    mimetype = "application/json"
+    return Response(response=results, status=status, mimetype=mimetype)
