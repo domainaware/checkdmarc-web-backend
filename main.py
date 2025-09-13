@@ -6,7 +6,7 @@ import json
 import dotenv
 import checkdmarc
 
-from flask import Flask, request, Response
+from flask import Flask, request, Response, render_template
 
 dotenv.load_dotenv()
 api_key = None
@@ -27,16 +27,21 @@ if "NAMESERVERS" in os.environ:
 app = Flask(__name__)
 
 
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
 @app.route("/domain/<domain>")
 def domain(domain):
     skip_tls = True
     check_smtp_tls = request.args.get("check_smtp_tls")
     provided_api_key = request.args.get("api_key")
     if api_key_required and provided_api_key is None:
-           return Response(
-                "An api_key parameter must be provided.",
-                status=401,
-            )
+        return Response(
+            "An api_key parameter must be provided.",
+            status=401,
+        )
     if check_smtp_tls.lower() in [1, "true"]:
         if provided_api_key is None:
             return Response(
