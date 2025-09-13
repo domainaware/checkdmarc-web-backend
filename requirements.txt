@@ -1,0 +1,5 @@
+checkdmarc>=5.10.7
+python-dotenv
+flask
+waitress
+ruff

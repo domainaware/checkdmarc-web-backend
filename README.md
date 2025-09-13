@@ -1,2 +1,11 @@
 # checkdmarc-web-backend
-The backend to the checkdmarc web application
+
+The backend for a web version of checkdmarc.
+
+## Why create a web version of checkdmarc?
+
+Websites and much easier to use and understand for some people. Pluse, it promotes the `checkdmarc` and `parsedmarc` projects.
+
+## Architecture
+
+This backend is separate from the [frontend project](https://github.com/domainaware/checkdmarc-web-frontend) to that the frontend can be placed behind Cloudflare to prevent abuse and DDoS attacks. The backend cannot be placed behind CloudFlare because the forward and reverse DNS entires need to match when checking SMTP TLS. to protect the backend, a filter will be placed on the server hosting the backend that will reject any requests not coming from the frontend webserver. Additionally, an API key is required to check for SMTP TLS.

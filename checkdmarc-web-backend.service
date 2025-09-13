@@ -1,0 +1,15 @@
+[Unit]
+Description=The checkdmarc backend web application
+Documentation=https://github.com/domainaware/checkdmarc-web-backend
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+WorkingDirectory=/opt/checkdmarc/checkdmarc-web-backend
+ExecStart=/opt/checkdmarc/checkdmarc-web-backend/venv/bin/waitress-serve --host 127.0.0.1 main:app
+User=checkdmarc
+Restart=always
+RestartSec=5m
+
+[Install]
+WantedBy=multi-user.target
