@@ -56,8 +56,7 @@ def domain(domain):
             return Response("The provided API key is invalid", status=403)
 
     results = checkdmarc.check_domains(
-        [domain], nameservers=nameservers, skip_tls=skip_tls, 
-        include_tag_descriptions=True
+        [domain], nameservers=nameservers, skip_tls=skip_tls
     )
     status = 200
     if "error" in results["soa"]:
