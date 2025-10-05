@@ -58,6 +58,7 @@ def domain(domain):
     results = checkdmarc.check_domains(
         [domain], nameservers=nameservers, skip_tls=skip_tls
     )
+    results["checkdmarc_version"] = checkdmarc.__version__
     status = 200
     if "error" in results["soa"]:
         if "does not exist" in results["soa"]["error"]:
