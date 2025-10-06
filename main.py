@@ -20,7 +20,7 @@ required_environment_variables = ["API_KEY", "CACHE_MAX_LEN", "CACHE_MAX_AGE_SEC
 missing_required_environment_variables = []
 for var in required_environment_variables:
     if var not in os.environ:
-        missing_required_environment_variables.append()
+        missing_required_environment_variables.append(var)
 if len(missing_required_environment_variables):
     print(
         f"The following required environment variables are missing: {",".join(missing_required_environment_variables)}"
