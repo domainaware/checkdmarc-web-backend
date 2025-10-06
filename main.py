@@ -12,24 +12,30 @@ from flask import Flask, request, Response, render_template
 
 dotenv.load_dotenv()
 
-cache_max_len = int(os.environ["CACHE_MAX_LEN"])
-cache_max_age_seconds = int(os.environ["CACHE_MAX_AGE_SECONDS"])
-cache = ExpiringDict(max_len=cache_max_len, max_age_seconds=cache_max_age_seconds)
+nameservers = os.getenv("NAMESERVERS")
+if nameservers:
+    nameservers = nameservers.lower().split(",")
 
-api_key = None
-api_key_required = False
-if "API_KEY" in os.environ:
-    api_key = os.environ["API_KEY"].strip()
-else:
-    print("Error: API_KEY is missing from the environment variables.")
+required_environment_variables = ["API_KEY", "CACHE_MAX_LEN", "CACHE_MAX_AGE_SECONDS"]
+missing_required_environment_variables = []
+for var in required_environment_variables:
+    if var not in os.environ:
+        missing_required_environment_variables.append()
+if len(missing_required_environment_variables):
+    print(
+        f"The following required environment variables are missing: {",".join(missing_required_environment_variables)}"
+    )
     exit(1)
 
-if "API_KEY_REQUIRED" in os.environ:
-    api_key = True if os.environ["API_KEY_REQUIRED"].lower() in ["1", "true"] else False
+api_key = os.getenv("API_KEY")
+if api_key:
+    api_key = api_key.strip()
+cache_max_len = os.getenv("CACHE_MAX_LEN")
+cache_max_age_seconds = os.getenv("CACHE_MAX_AGE_SECONDS")
+cache = ExpiringDict(
+    max_len=int(cache_max_len), max_age_seconds=int(cache_max_age_seconds)
+)
 
-nameservers = None
-if "NAMESERVERS" in os.environ:
-    nameservers = os.environ["NAMESERVERS"].split(",")
 
 app = Flask(__name__)
 
@@ -42,14 +48,10 @@ def index():
 @app.route("/domain/<domain>")
 def domain(domain):
     skip_tls = True
-    check_smtp_tls = request.args.get("check_smtp_tls")
+    check_smtp_tls = bool(request.args.get("check_smtp_tls"))
     provided_api_key = request.args.get("api_key")
-    if api_key_required and provided_api_key is None:
-        return Response(
-            "An api_key parameter must be provided.",
-            status=401,
-        )
-    if check_smtp_tls is not None and check_smtp_tls in [1, "true"]:
+
+    if check_smtp_tls:
         if provided_api_key is None:
             return Response(
                 "An api_key parameter must be provided if check_smtp_tls is true.",
@@ -83,4 +85,5 @@ def domain(domain):
             status = 404
     results = json.dumps(results, indent=2)
     mimetype = "application/json"
+
     return Response(response=results, status=status, mimetype=mimetype)

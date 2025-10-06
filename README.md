@@ -12,9 +12,9 @@ This backend is separate from the [frontend project](https://github.com/domainaw
 
 ## Environment variables
 
-The following environment variables are required and can be provided by a `.env` file.
+The following environment variables can be provided by a `.env` file.
 
-- `API_KEY` - An API key (generate one using `generate_api_key.py`)
-- `NAMESERVERS` - A comma separated list of DNS nameservers to use
-- `CACHE_MAX_LEN` - The maximum size of the cache
-- `CACHE_MAX_AGE_SECONDS` - The maximum age of a cached item in seconds
+- `API_KEY` - An API key to be required for some calls (generate one using `generate_api_key.py`)
+- `NAMESERVERS` - A comma separated list of DNS nameservers to use (optional)
+- `CACHE_MAX_AGE_SECONDS` - The maximum age of a cached item in seconds (required)
+- `CACHE_MAX_LEN` - The maximum size of the cache (required)
