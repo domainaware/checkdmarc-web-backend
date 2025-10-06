@@ -12,8 +12,8 @@ from flask import Flask, request, Response, render_template
 
 dotenv.load_dotenv()
 
-cache_max_len = os.environ["CACHE_MAX_LEN"]
-cache_max_age_seconds = os.environ["CACHE_MAX_AGE_SECONDS"]
+cache_max_len = int(os.environ["CACHE_MAX_LEN"])
+cache_max_age_seconds = int(os.environ["CACHE_MAX_AGE_SECONDS"])
 cache = ExpiringDict(max_len=cache_max_len, max_age_seconds=cache_max_age_seconds)
 
 api_key = None
@@ -75,7 +75,7 @@ def domain(domain):
         timedelta = datetime.timedelta(seconds=cache_max_age_seconds)
         cache_expires = timestamp + timedelta
         results["cache_expires"] = cache_expires.strftime("%Y-%m-%d %H:%M UTC")
-        results["cache_)expires_epoch"] = cache_expires.timestamp()
+        results["cache_expires_epoch"] = cache_expires.timestamp()
         cache[domain] = results
     status = 200
     if "error" in results["soa"]:
