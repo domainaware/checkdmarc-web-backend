@@ -30,8 +30,8 @@ if len(missing_required_environment_variables):
 api_key = os.getenv("API_KEY")
 if api_key:
     api_key = api_key.strip()
-cache_max_len = os.getenv("CACHE_MAX_LEN")
-cache_max_age_seconds = os.getenv("CACHE_MAX_AGE_SECONDS")
+cache_max_len = int(os.getenv("CACHE_MAX_LEN"))
+cache_max_age_seconds = int(os.getenv("CACHE_MAX_AGE_SECONDS"))
 cache = ExpiringDict(
     max_len=int(cache_max_len), max_age_seconds=int(cache_max_age_seconds)
 )
