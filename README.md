@@ -8,7 +8,7 @@ Websites and much easier to use and understand for some people. Pluse, it promot
 
 ## Architecture
 
-This backend is separate from the [frontend project](https://github.com/domainaware/checkdmarc-web-frontend) to that the frontend can be placed behind Cloudflare to prevent abuse and DDoS attacks. The backend cannot be placed behind CloudFlare because the forward and reverse DNS entires need to match when checking SMTP TLS. to protect the backend, a filter will be placed on the server hosting the backend that will reject any requests not coming from the frontend webserver. Additionally, an API key is required to check for SMTP TLS.
+This backend is separate from the [frontend project](https://github.com/domainaware/checkdmarc-web-frontend) to that the frontend can be placed behind Cloudflare to prevent abuse and DDoS attacks. The backend cannot be placed behind CloudFlare because the forward and reverse DNS entires need to match when checking SMTP TLS. This also allows the backend to display a a simple webpage explaining its purpose to anyone visiting the reverse DNS hostname with a web browser. To prevent abuse, results are stored in a short-lived cache, and an API key is required to do SMTP TLS checks.
 
 ## Environment variables
 
