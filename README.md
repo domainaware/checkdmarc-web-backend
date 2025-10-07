@@ -1,10 +1,10 @@
 # checkdmarc-web-backend
 
-The backend for a web version of checkdmarc.
+The backend for a web version of [checkdmarc](https://github.com/domainaware/checkdmarc).
 
 ## Why create a web version of checkdmarc?
 
-Websites and much easier to use and understand for some people. Pluse, it promotes the `checkdmarc` and `parsedmarc` projects.
+Websites and much easier to use and understand for some people. Plus, it promotes the `checkdmarc` and `parsedmarc` projects.
 
 ## Architecture
 
