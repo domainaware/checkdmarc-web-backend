@@ -27,9 +27,8 @@ if len(missing_required_environment_variables):
     )
     exit(1)
 
-api_key = os.getenv("API_KEY")
-if api_key:
-    api_key = api_key.strip()
+api_key = os.getenv("API_KEY").strip()
+require_api_key = bool(os.getenv("REQUIRE_API_KEY"))
 cache_max_len = int(os.getenv("CACHE_MAX_LEN"))
 cache_max_age_seconds = int(os.getenv("CACHE_MAX_AGE_SECONDS"))
 cache = ExpiringDict(
@@ -50,7 +49,15 @@ def domain(domain):
     skip_tls = True
     check_smtp_tls = bool(request.args.get("check_smtp_tls"))
     provided_api_key = request.args.get("api_key")
-
+    if require_api_key:
+        if provided_api_key is None:
+             return Response(
+                "An api_key parameter must be provided.",
+                status=401,
+            )
+        else:
+            if provided_api_key.strip() != api_key:
+                return Response("The provided API key is invalid", status=403)
     if check_smtp_tls:
         if provided_api_key is None:
             return Response(
