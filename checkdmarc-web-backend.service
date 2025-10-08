@@ -6,7 +6,7 @@ After=network.target network-online.target
 
 [Service]
 WorkingDirectory=/opt/checkdmarc/checkdmarc-web-backend
-ExecStart=/opt/checkdmarc/checkdmarc-web-backend/venv/bin/waitress-serve --host 127.0.0.1 main:app
+ExecStart=/opt/checkdmarc/checkdmarc-web-backend/venv/bin/waitress-serve --listen=127.0.0.1:8080 --trusted-proxy=127.0.0.1 main:app
 User=checkdmarc
 Restart=always
 RestartSec=5m
