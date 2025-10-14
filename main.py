@@ -8,7 +8,7 @@ import dotenv
 import checkdmarc
 from expiringdict import ExpiringDict
 
-from flask import Flask, request, Response, render_template
+from flask import Flask, Response, request, render_template
 
 dotenv.load_dotenv()
 
@@ -53,25 +53,20 @@ def domain(domain):
     provided_api_key = request.args.get("api_key")
     if require_api_key:
         if provided_api_key is None:
-             return Response(
-                "An api_key parameter must be provided.",
-                status=401,
-            )
+             return "An api_key parameter must be provided.", 401
+            
         else:
             if provided_api_key.strip() != api_key:
-                return Response("The provided API key is invalid", status=403)
+                return "The provided API key is invalid", 403
     if check_smtp_tls:
         if provided_api_key is None:
-            return Response(
-                "An api_key parameter must be provided if check_smtp_tls is true.",
-                status=401,
-            )
+               return "An api_key parameter must be provided if check_smtp_tls is true.", 401
         else:
             provided_api_key = provided_api_key.strip()
         if provided_api_key == api_key:
             skip_tls = False
         else:
-            return Response("The provided API key is invalid", status=403)
+            return "The provided API key is invalid", 403
 
     if domain in cache:
         results = cache[domain]
@@ -80,7 +75,7 @@ def domain(domain):
             [domain], nameservers=nameservers, skip_tls=skip_tls
         )
         if isinstance(results, list) and len(results) == 0:
-            return Response("Invalid domain", status=400)
+            return "Invalid domain", 400
         results["checkdmarc_version"] = checkdmarc.__version__
         timestamp = datetime.datetime.now(datetime.timezone.utc)
         results["timestamp"] = timestamp.strftime("%Y-%m-%d %H:%M UTC")
