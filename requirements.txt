@@ -1,4 +1,4 @@
-checkdmarc>=5.10.10
+checkdmarc>=5.12.0
 python-dotenv
 flask
 waitress

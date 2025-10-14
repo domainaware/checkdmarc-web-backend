@@ -28,7 +28,9 @@ if len(missing_required_environment_variables):
     exit(1)
 
 api_key = os.getenv("API_KEY").strip()
-require_api_key = bool(os.getenv("REQUIRE_API_KEY"))
+require_api_key = os.getenv("REQUIRE_API_KEY")
+if require_api_key:
+    require_api_key = require_api_key.lower() in ["true", "1"]
 cache_max_len = int(os.getenv("CACHE_MAX_LEN"))
 cache_max_age_seconds = int(os.getenv("CACHE_MAX_AGE_SECONDS"))
 cache = ExpiringDict(
@@ -77,6 +79,8 @@ def domain(domain):
         results = checkdmarc.check_domains(
             [domain], nameservers=nameservers, skip_tls=skip_tls
         )
+        if isinstance(results, list) and len(results) == 0:
+            return Response("Invalid domain", status=400)
         results["checkdmarc_version"] = checkdmarc.__version__
         timestamp = datetime.datetime.now(datetime.timezone.utc)
         results["timestamp"] = timestamp.strftime("%Y-%m-%d %H:%M UTC")
