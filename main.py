@@ -28,7 +28,9 @@ if len(missing_required_environment_variables):
     exit(1)
 
 api_key = os.getenv("API_KEY").strip()
-require_api_key = os.getenv("REQUIRE_API_KEY").lower() in ["true", "1"]
+require_api_key = os.getenv("REQUIRE_API_KEY")
+if require_api_key:
+    require_api_key = require_api_key.lower() in ["true", "1"]
 cache_max_len = int(os.getenv("CACHE_MAX_LEN"))
 cache_max_age_seconds = int(os.getenv("CACHE_MAX_AGE_SECONDS"))
 cache = ExpiringDict(
