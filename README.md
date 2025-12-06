@@ -4,7 +4,7 @@ The backend for a web version of [checkdmarc](https://github.com/domainaware/che
 
 ## Why create a web version of checkdmarc?
 
-Websites and much easier to use and understand for some people. Plus, it promotes the `checkdmarc` and `parsedmarc` projects.
+Websites are much easier to use and understand for some people. Plus, it promotes the `checkdmarc` and `parsedmarc` projects.
 
 ## Architecture
 
